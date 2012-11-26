@@ -1,5 +1,6 @@
 #include "GraphAlgs.h"
 
+#include <iostream>
 using namespace std;
 
 /*
@@ -17,7 +18,7 @@ using namespace std;
  *     Every pair of nodes u,v  (u != v) has an edge connecting the of weight > 0.
  */
 vector<NodeID> bestTour;
-double bestTourLen;
+double bestTourLen = 0;
 Graph* graphRef;
 
 
@@ -31,22 +32,21 @@ void swap(vector<NodeID> &arr, int index1, int index2)
 //Recursive algorithm
 void tour(vector<NodeID> arr,int total, int startPlace = 0)
 {
-	//Bounding section. Add up the total so far. If a weight is 0 (Invalid tour) or
-	//the tour so far is greater than the shortest tour, return from this recursive case.
+	
 	if(total - startPlace == 1)
 	{
 		double tourLen = 0;
 		for(int i = 0; i < total - 1; i++)
 		{
 			double edgeLength = graphRef->weight(arr[i], arr[i + 1]);
-			if(edgeLength == 0)
+			if(edgeLength == 0) 
 				return;
 			else
 				tourLen += edgeLength;
 		}
-		if(graphRef->weight(arr[total - 1], 0) == 0) return;
+		if(graphRef->weight(arr[total - 1], arr[0]) == 0) return;
 
-		tourLen += graphRef->weight(arr[total - 1], 0);
+		tourLen += graphRef->weight(arr[total - 1], arr[0]);
 
 		//Check to see if it's better.
 		if(bestTourLen == 0 || tourLen < bestTourLen)
