@@ -3,20 +3,7 @@
 #include <iostream>
 using namespace std;
 
-/*
- * Solves the Traveling Salesperson Problem: finding the shortest cycle through a graph that 
- * vists every node exactly once (with exception of the first node, which is repeated as the 
- * last node in the cycle.)
- * 
- * Return value: Return a pair, with the first element being a vector of length n listing the 
- *  order of the nodes in the cycle (do NOT list the start node twice), and the second element
- *  being the length of that path (do NOT forget to include the edge from the last node back to
- *  the start node in the total length.
- *
- * Preconditions: 
- *     G is undirected.
- *     Every pair of nodes u,v  (u != v) has an edge connecting the of weight > 0.
- */
+
 vector<NodeID> bestTour;
 double bestTourLen = 0;
 Graph* graphRef;
@@ -38,15 +25,10 @@ void tour(vector<NodeID> arr,int total, int startPlace = 0)
 		double tourLen = 0;
 		for(int i = 0; i < total - 1; i++)
 		{
-			double edgeLength = graphRef->weight(arr[i], arr[i + 1]);
-			if(edgeLength == 0) 
-				return;
-			else
-				tourLen += edgeLength;
+			tourLen += graphRef->weight(arr[i], arr[i + 1]);
 		}
-		if(graphRef->weight(arr[total - 1], arr[0]) == 0) return;
 
-		tourLen += graphRef->weight(arr[total - 1], arr[0]);
+		tourLen += graphRef->weight(arr[total - 1], arr[0]); //Loop back to start
 
 		//Check to see if it's better.
 		if(bestTourLen == 0 || tourLen < bestTourLen)
@@ -74,8 +56,23 @@ void tour(vector<NodeID> arr,int total, int startPlace = 0)
 
 }
 
+/*
+ * Solves the Traveling Salesperson Problem: finding the shortest cycle through a graph that 
+ * vists every node exactly once (with exception of the first node, which is repeated as the 
+ * last node in the cycle.)
+ * 
+ * Return value: Return a pair, with the first element being a vector of length n listing the 
+ *  order of the nodes in the cycle (do NOT list the start node twice), and the second element
+ *  being the length of that path (do NOT forget to include the edge from the last node back to
+ *  the start node in the total length.
+ *
+ * Preconditions: 
+ *     G is undirected.
+ *     Every pair of nodes u,v  (u != v) has an edge connecting the of weight > 0.
+ */
 pair<vector<NodeID>, EdgeWeight> TSP(Graph* G)
 {
+	bestTourLen = 0;
 	graphRef = G;
 	vector<NodeID> order = vector<NodeID>(G->size());
 	for(int i = 0; i < G->size(); i++)
